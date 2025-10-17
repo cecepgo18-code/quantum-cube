@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Cube - Space Adventure</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="stars"></div>
+    <div class="stars2"></div>
+    <div class="stars3"></div>
+
+    <!-- Audio -->
+    <audio id="bgMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-space-game-668.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="gameOverSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-over-233.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="auth-container">
+            <div class="game-logo">
+                <div class="quantum-cube">
+                    <div class="cube-face front"></div>
+                    <div class="cube-face back"></div>
+                    <div class="cube-face right"></div>
+                    <div class="cube-face left"></div>
+                    <div class="cube-face top"></div>
+                    <div class="cube-face bottom"></div>
+                </div>
+                <h1>QUANTUM CUBE</h1>
+                <p class="tagline">Navigate the Cosmic Gates</p>
+            </div>
+            
+            <div class="auth-form">
+                <div class="form-group">
+                    <i class="fas fa-user-astronaut"></i>
+                    <input type="text" id="loginUsername" placeholder="Commander Name" maxlength="12">
+                </div>
+                
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Access Code">
+                </div>
+                
+                <button id="loginBtn" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> INITIATE SYSTEMS
+                </button>
+                
+                <div class="auth-divider">
+                    <span>NEW COMMANDER?</span>
+                </div>
+                
+                <button id="showRegisterBtn" class="btn-secondary">
+                    <i class="fas fa-user-plus"></i> CREATE PROFILE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="registerScreen" class="screen">
+        <div class="auth-container">
+            <div class="game-logo">
+                <div class="quantum-cube">
+                    <div class="cube-face front"></div>
+                    <div class="cube-face back"></div>
+                    <div class="cube-face right"></div>
+                    <div class="cube-face left"></div>
+                    <div class="cube-face top"></div>
+                    <div class="cube-face bottom"></div>
+                </div>
+                <h1>JOIN THE FLEET</h1>
+            </div>
+            
+            <div class="auth-form">
+                <div class="form-group">
+                    <i class="fas fa-user-astronaut"></i>
+                    <input type="text" id="registerUsername" placeholder="Choose Callsign" maxlength="12">
+                </div>
+                
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="registerPassword" placeholder="Create Access Code">
+                </div>
+                
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Access Code">
+                </div>
+                
+                <button id="registerBtn" class="btn-primary">
+                    <i class="fas fa-rocket"></i> ACTIVATE PROFILE
+                </button>
+                
+                <button id="showLoginBtn" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> BACK TO LOGIN
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game -->
+    <div id="gameScreen" class="screen">
+        <!-- Header -->
+        <div class="game-header">
+            <div class="player-info">
+                <div class="player-avatar">
+                    <div class="avatar-cube" id="currentCubeAvatar"></div>
+                </div>
+                <div class="player-details">
+                    <h3 id="playerName">COMMANDER</h3>
+                    <div class="player-stats">
+                        <span class="credits"><i class="fas fa-coins"></i> <span id="coins">0</span></span>
+                        <span class="level">Lv.<span id="playerLevel">1</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-scores">
+                <div class="score-display">
+                    <i class="fas fa-bolt"></i>
+                    <span id="currentScore">0</span>
+                </div>
+                <div class="high-score">
+                    <i class="fas fa-trophy"></i>
+                    <span id="highScore">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <div class="game-wrapper">
+            <canvas id="gameCanvas" width="400" height="600"></canvas>
+            
+            <!-- Start Menu -->
+            <div id="startMenu" class="overlay-menu active">
+                <div class="menu-content">
+                    <h2>QUANTUM CUBE</h2>
+                    <div class="menu-buttons">
+                        <button id="playBtn" class="menu-btn primary">
+                            <i class="fas fa-play"></i> LAUNCH MISSION
+                        </button>
+                        <button id="tutorialBtn" class="menu-btn">
+                            <i class="fas fa-graduation-cap"></i> TRAINING
+                        </button>
+                        <button id="shopMenuBtn" class="menu-btn">
+                            <i class="fas fa-shopping-cart"></i> QUANTUM STORE
+                        </button>
+                        <button id="settingsMenuBtn" class="menu-btn">
+                            <i class="fas fa-cog"></i> SYSTEMS
+                        </button>
+                        <button id="leaderboardMenuBtn" class="menu-btn">
+                            <i class="fas fa-ranking-star"></i> RANKINGS
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tutorial Screen -->
+            <div id="tutorialScreen" class="overlay-menu">
+                <div class="menu-content">
+                    <h2>MISSION BRIEFING</h2>
+                    <div class="tutorial-content">
+                        <div class="tutorial-step">
+                            <div class="step-icon">🎯</div>
+                            <div class="step-text">
+                                <h3>OBJECTIVE</h3>
+                                <p>Navigate your Quantum Cube through cosmic energy gates</p>
+                            </div>
+                        </div>
+                        <div class="tutorial-step">
+                            <div class="step-icon">🚀</div>
+                            <div class="step-text">
+                                <h3>CONTROLS</h3>
+                                <p><strong>CLICK</strong> or press <strong>SPACE</strong> to thrust upward</p>
+                            </div>
+                        </div>
+                        <div class="tutorial-step">
+                            <div class="step-icon">⭐</div>
+                            <div class="step-text">
+                                <h3>SCORING</h3>
+                                <p>+1 point for each gate cleared<br>+5 credits every 10 points</p>
+                            </div>
+                        </div>
+                        <div class="tutorial-step">
+                            <div class="step-icon">⚠️</div>
+                            <div class="step-text">
+                                <h3>AVOID</h3>
+                                <p>Colliding with gates or boundaries</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="menu-btn primary" onclick="quantumGame.hideTutorial()">
+                        <i class="fas fa-check"></i> UNDERSTOOD
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pause Menu -->
+            <div id="pauseMenu" class="overlay-menu">
+                <div class="menu-content">
+                    <h2>MISSION PAUSED</h2>
+                    <div class="menu-buttons">
+                        <button id="resumeBtn" class="menu-btn primary">
+                            <i class="fas fa-play"></i> RESUME
+                        </button>
+                        <button id="restartBtn" class="menu-btn">
+                            <i class="fas fa-redo"></i> RESTART
+                        </button>
+                        <button onclick="quantumGame.returnToMenu()" class="menu-btn">
+                            <i class="fas fa-home"></i> MAIN MENU
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="gameOverScreen" class="overlay-menu">
+                <div class="menu-content">
+                    <div class="result-header">
+                        <div class="result-icon">💫</div>
+                        <h2>MISSION COMPLETE</h2>
+                    </div>
+                    
+                    <div class="result-stats">
+                        <div class="stat">
+                            <span class="label">ENERGY COLLECTED</span>
+                            <span class="value" id="finalScore">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">PERSONAL BEST</span>
+                            <span class="value" id="finalHighScore">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">CREDITS EARNED</span>
+                            <span class="value" id="earnedCoins">0</span>
+                        </div>
+                    </div>
+
+                    <div class="menu-buttons">
+                        <button onclick="quantumGame.restartGame()" class="menu-btn primary">
+                            <i class="fas fa-redo"></i> NEW MISSION
+                        </button>
+                        <button onclick="quantumGame.returnToMenu()" class="menu-btn">
+                            <i class="fas fa-home"></i> COMMAND CENTER
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-btn" onclick="quantumGame.showShop()">
+                <i class="fas fa-store"></i>
+                <span>STORE</span>
+            </button>
+            <button class="nav-btn" onclick="quantumGame.showDaily()">
+                <i class="fas fa-gift"></i>
+                <span>DAILY</span>
+            </button>
+            <button class="nav-btn" onclick="quantumGame.showProfile()">
+                <i class="fas fa-user"></i>
+                <span>PROFILE</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div id="shopModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shopping-cart"></i> QUANTUM STORE</h3>
+                <button class="close-btn" onclick="quantumGame.hideModal('shopModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="shop-balance">
+                    <i class="fas fa-coins"></i>
+                    <span id="shopBalance">0</span> CREDITS AVAILABLE
+                </div>
+
+                <div class="shop-tabs">
+                    <button class="tab-btn active" data-tab="cubes">QUANTUM CUBES</button>
+                    <button class="tab-btn" data-tab="trails">ENERGY TRAILS</button>
+                    <button class="tab-btn" data-tab="effects">COSMIC EFFECTS</button>
+                </div>
+
+                <div class="shop-items" id="shopItems">
+                    <!-- Items will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-astronaut"></i> COMMANDER PROFILE</h3>
+                <button class="close-btn" onclick="quantumGame.hideModal('profileModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <div class="avatar-cube" id="profileCube"></div>
+                    </div>
+                    <div class="profile-info">
+                        <h4 id="profileName">COMMANDER</h4>
+                        <button class="edit-btn" onclick="quantumGame.showNameEditor()">
+                            <i class="fas fa-edit"></i> EDIT
+                        </button>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-trophy"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="profileHighScore">0</span>
+                            <span class="stat-label">BEST SCORE</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-rocket"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="profileGames">0</span>
+                            <span class="stat-label">MISSIONS</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="profileTime">0m</span>
+                            <span class="stat-label">PLAY TIME</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-ranking-star"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="profileRank">#1</span>
+                            <span class="stat-label">RANK</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="btn-secondary" onclick="quantumGame.logout()">
+                        <i class="fas fa-sign-out-alt"></i> SWITCH COMMANDER
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Name Editor Modal -->
+    <div id="nameEditorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> CHANGE CALLSIGN</h3>
+                <button class="close-btn" onclick="quantumGame.hideModal('nameEditorModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" id="newPlayerName" placeholder="Enter new callsign" maxlength="12">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="quantumGame.savePlayerName()">SAVE CALLSIGN</button>
+                    <button class="btn-secondary" onclick="quantumGame.hideModal('nameEditorModal')">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Reward Modal -->
+    <div id="dailyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-gift"></i> DAILY QUANTUM BOOST</h3>
+                <button class="close-btn" onclick="quantumGame.hideModal('dailyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="daily-content">
+                    <div class="reward-amount">
+                        <i class="fas fa-coins"></i>
+                        +<span id="dailyReward">50</span>
+                    </div>
+                    <p>Daily login bonus collected!</p>
+                    <div class="streak-info">
+                        <i class="fas fa-fire"></i>
+                        Streak: <span id="streakCount">0</span> days
+                    </div>
+                    <button class="btn-primary" onclick="quantumGame.claimDaily()">
+                        <i class="fas fa-gift"></i> COLLECT REWARD
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-cogs"></i> SYSTEMS CONTROL</h3>
+                <button class="close-btn" onclick="quantumGame.hideModal('settingsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-volume-up"></i>
+                            <span>Sound Effects</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-music"></i>
+                            <span>Background Music</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="musicToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Game Difficulty</span>
+                        </div>
+                        <select id="difficultySelect">
+                            <option value="easy">CADET</option>
+                            <option value="medium" selected>COMMANDER</option>
+                            <option value="hard">ADMIRAL</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <i class="fas fa-palette"></i>
+                            <span>Particle Quality</span>
+                        </div>
+                        <select id="particleSelect">
+                            <option value="low">LOW</option>
+                            <option value="medium" selected>MEDIUM</option>
+                            <option value="high">HIGH</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-ranking-star"></i> GALACTIC RANKINGS</h3>
+                <button class="close-btn" onclick="quantumGame.hideModal('leaderboardModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="leaderboard" id="leaderboardList">
+                    <!-- Leaderboard entries will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
